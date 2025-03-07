@@ -20,14 +20,4 @@ namespace Assets.Sources.StaticDataService
         public EnviromentObjectConfiguration GetEnvironmentObject(EnvironmentObjectType type) =>
             _environmentObjectsConfigurations.TryGetValue(type, out EnviromentObjectConfiguration configuration) ? configuration : null;
     }
-    [CreateAssetMenu(fileName = "EnviromentObjectConfiguration", menuName = "Configuration/Create new enviroment object configuration", order = 51)]
-    public class EnviromentObjectConfiguration : ScriptableObject
-    {
-        public EnvironmentObjectType Type;
-        public EnvironmentObject Prefab;
-    }
-    public class ConfigurationPath
-    {
-        public const string EnvironmentObjects = "";
-    }
 }
