@@ -1,6 +1,6 @@
 ﻿namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 {
-    public interface ITikable
+    public interface ITickable
     {
         void Tick();
     }

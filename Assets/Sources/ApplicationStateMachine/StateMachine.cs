@@ -26,12 +26,9 @@ namespace Assets.Sources.ApplicationStateMachine
             state.Enter(payload);
         }
 
-        public void RegisterStates<TState>(params TState[] states)
-            where TState : IExitableState
-        {
-            foreach (TState state in states)
-                _states.Add(typeof(TState), state);
-        }
+        public void RegisterState<TState>(TState state)
+            where TState : IExitableState =>
+            _states.Add(typeof(TState), state);
 
         private TState GetState<TState>()
             where TState : class, IExitableState =>

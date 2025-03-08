@@ -38,5 +38,8 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 
             CurrentObject = Object.Instantiate(_staticDataService.GetEnvironmentObject(_currentType).Prefab);
         }
+
+        public void Reset() =>
+            CurrentObject = null;
     }
 }

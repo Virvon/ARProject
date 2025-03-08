@@ -2,12 +2,12 @@
 
 namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 {
-    public class EnvironmentObjectCreateorPresenter : IDisposable
+    public class EnvironmentObjectCreatorPresenter : IDisposable
     {
         private readonly EnvironmentObjectCreationView _view;
         private readonly EnvironmentObjectCreator _model;
 
-        public EnvironmentObjectCreateorPresenter(EnvironmentObjectCreationView view, EnvironmentObjectCreator model)
+        public EnvironmentObjectCreatorPresenter(EnvironmentObjectCreationView view, EnvironmentObjectCreator model)
         {
             _view = view;
             _model = model;
