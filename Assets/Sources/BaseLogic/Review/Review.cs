@@ -11,15 +11,7 @@ namespace Assets.Sources.BaseLogic
         public Review(StateMachine stateMachine) =>
             _stateMachine = stateMachine;
 
-        public event Action<bool> ActiveChanged;
-
-        public void SetActive(bool isActive) =>
-            ActiveChanged?.Invoke(isActive);
-
-        public void MoveNextState()
-        {
-            SetActive(false);
+        public void MoveNextState() =>
             _stateMachine.Enter<EnvironmentObjectCreationState>();
-        }
     }
 }

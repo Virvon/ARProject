@@ -5,23 +5,29 @@ namespace Assets.Sources.BaseLogic.EnvironmentObject
 {
     public class EnvironmentObject : MonoBehaviour
     {
-        Vector3 x;
-        public void Draw(Vector3 worldPosition)
-        {
-            x = worldPosition;
-        }
+        private const float MinScale = 0.5f;
+        private const float MaxScale = 1.5f;
+        private const float ScaleFactor = 0.001f;
 
-        private void OnDrawGizmos()
-        {
-            if (x == null)
-                return;
+        private float _scale;
 
-            Gizmos.DrawSphere(x, 0.2f);
+        private void Start()
+        {
+            _scale = 1;
         }
 
         public void Destroy()
         {
             Destroy(gameObject);
+        }
+
+        public void Scale(float value)
+        {
+            _scale += value * ScaleFactor;
+
+            _scale = Mathf.Clamp(_scale, MinScale, MaxScale);
+
+            transform.localScale = Vector3.one * _scale;
         }
     }
 }

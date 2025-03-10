@@ -1,31 +1,59 @@
-﻿using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
+﻿using Assets.Sources.BaseLogic.EnvironmentObject;
+using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
+using Assets.Sources.Services.InputService;
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 namespace Assets.Sources.ApplicationStateMachine.States
 {
-    public class EnvironmentObjectTransformationState : IState
+    public class EnvironmentObjectTransformationState : IPayloadState<EnvironmentObject>
     {
-        private readonly EnvironmentObjectTransformator _transformator;
-        private readonly EnvironmentObjectHandlerPositioner _positioner;
+        private readonly IInputService _inputService;
+        private readonly ARRaycastManager _raycastManager;
+        private readonly Camera _camera;
         private readonly TransformationView _transformationView;
+        private readonly StateMachine _stateMachine;
+        private readonly TransformationModel _transformationModel;
 
-        public EnvironmentObjectTransformationState(EnvironmentObjectTransformator transformator, EnvironmentObjectHandlerPositioner positioner, TransformationView transformationView)
+        private EnvironmentObjectTransformator _transformator;
+        private EnvironmentObjectHandlerPositioner _positioner;
+        private TransformationPresenter _transformationPresenter;
+
+        public EnvironmentObjectTransformationState(
+            IInputService inputService,
+            ARRaycastManager raycastManager,
+            Camera camera,
+            TransformationView transformationView,
+            StateMachine stateMachine)
         {
-            _transformator = transformator;
-            _positioner = positioner;
+            _inputService = inputService;
+            _raycastManager = raycastManager;
+            _camera = camera;
             _transformationView = transformationView;
+            _stateMachine = stateMachine;
+
+            _transformationModel = new(_stateMachine);
         }
 
-        public void Enter()
+        public void Enter(EnvironmentObject environmentObject)
         {
-            _transformator.SetActive(true);
-            _positioner.SetActive(true);
+            Debug.Log("Enter transformation state");
+
+            _transformator = new(_inputService, _camera);
+            _positioner = new(_inputService, _raycastManager, _camera, environmentObject);
+            _transformationPresenter = new(_transformationModel, _transformationView);
+
             _transformationView.Show();
+            _transformator.SetObject(environmentObject);
+
+            Debug.Log("Finis entered to transformation state");
         }
 
         public void Exit()
         {
-            _transformator.SetActive(false);
-            _positioner.SetActive(false);
+            _transformator.Dispose();
+            _positioner.Dispose();
+            _transformationPresenter.Dispose();
             _transformationView.Hide();
         }
     }

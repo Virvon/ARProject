@@ -47,6 +47,7 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
                 CurrentObject.Destroy();
 
             CurrentObject = Object.Instantiate(_staticDataService.GetEnvironmentObject(_objectTypes[_currentObjectIndex]).Prefab);
+
             Created?.Invoke();
         }
     }

@@ -42,8 +42,9 @@ namespace Assets.Sources.Services.InputService
 
             if(firstTouch.phase == TouchPhase.Moved || secondTouch.phase == TouchPhase.Moved)
             {
-                float delta = (firstTouch.position - secondTouch.position).magnitude - _lastDistance;
-                _lastDistance = delta;
+                float magnitude = (firstTouch.position - secondTouch.position).magnitude;
+                float delta = magnitude - _lastDistance;
+                _lastDistance = magnitude;
 
                 Zoomed?.Invoke(delta);
             }
@@ -62,6 +63,7 @@ namespace Assets.Sources.Services.InputService
                 case TouchPhase.Moved:
                     if (_isDragged)
                     {
+                        Debug.Log("drag");
                         Dragged?.Invoke(touch.position);
                     }
                     break;

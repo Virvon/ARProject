@@ -1,4 +1,4 @@
-﻿namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
+﻿namespace Assets.Sources.Services.TickService
 {
     public interface ITickable
     {

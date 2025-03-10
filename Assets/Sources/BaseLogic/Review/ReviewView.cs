@@ -15,7 +15,6 @@ namespace Assets.Sources.BaseLogic
         {
             _button.onClick.AddListener(OnButtonClicked);
             _canvas.enabled = true;
-            Debug.Log("Show review");
         }
 
         public override void Hide()

@@ -1,5 +1,4 @@
-﻿using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
-using Assets.Sources.Services.InputService;
+﻿using Assets.Sources.Services.InputService;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,29 +11,26 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
         private const float RaycastDistace = 100;
 
         private readonly IInputService _inputService;
-        private readonly EnvironmentObjectCreator _creator;
         private readonly ARRaycastManager _raycastManager;
         private readonly Camera _camera;
+        private readonly EnvironmentObject.EnvironmentObject _environmentObject;
 
         private bool _needReplaced;
-        private bool _isActive;
 
         public EnvironmentObjectHandlerPositioner(
             IInputService inputService,
-            EnvironmentObjectCreator creator,
             ARRaycastManager raycastManager,
-            Camera camera)
+            Camera camera,
+            EnvironmentObject.EnvironmentObject environmentObject)
         {
             _inputService = inputService;
-            _creator = creator;
             _raycastManager = raycastManager;
             _camera = camera;
-
-            _isActive = false;
 
             _inputService.Clicked += OnClicked;
             _inputService.Dragged += OnDragged;
             _inputService.DragEnded += OnDragEnded;
+            _environmentObject = environmentObject;
         }
 
         public void Dispose()
@@ -44,33 +40,24 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
             _inputService.DragEnded -= OnDragEnded;
         }
 
-        public void SetActive(bool isActive) =>
-            _isActive = isActive;
-
         private void OnClicked(Vector2 position)
         {
-            if (_isActive == false)
-                return;
-
             Ray ray = _camera.ScreenPointToRay(position);
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo, RaycastDistace)
                 && hitInfo.transform.TryGetComponent(out EnvironmentObject.EnvironmentObject environmentObject)
-                && environmentObject == _creator.CurrentObject)
+                && environmentObject == _environmentObject)
                 _needReplaced = true;
         }
 
         private void OnDragged(Vector2 position)
         {
-            if (_isActive == false)
-                return;
-
             if (_needReplaced)
             {
                 List<ARRaycastHit> hits = new();
 
                 if (_raycastManager.Raycast(position, hits))
-                    _creator.CurrentObject.transform.position = hits[0].pose.position;
+                    _environmentObject.transform.position = hits[0].pose.position;
             }
         }
 

@@ -1,47 +1,82 @@
-﻿using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
+﻿using Assets.Sources.BaseLogic.EnvironmentObject;
+using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
 using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
+using Assets.Sources.Services.InputService;
+using Assets.Sources.Services.TickService;
+using Assets.Sources.StaticDataService;
+using System;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 namespace Assets.Sources.ApplicationStateMachine.States
 {
     public class EnvironmentObjectCreationState : IState
     {
-        private readonly EnvironmentObjectCreator _creator;
-        private readonly EnvironmentObjectCameraPositioner _positioner;
+        private readonly IStaticDataService _staticDataService;
+        private readonly ARRaycastManager _raycastManager;
+        private readonly Camera _camera;
+        private readonly IInputService _inputService;
+        private readonly CreationView _creationView;
         private readonly StateMachine _stateMachine;
-        private readonly EnvironmentObjectTransformator _transformator;
+        private readonly TickService _tickService;
+
+        EnvironmentObjectCameraPositioner _positioner;
+        CreatorPresenter _creatorPresenter;
+        EnvironmentObjectCreator _creator;
+        EnvironmentObjectTransformator _transformator;
 
         public EnvironmentObjectCreationState(
-            EnvironmentObjectCreator creator,
-            EnvironmentObjectCameraPositioner positioner,
+            IStaticDataService staticDataService,
+            ARRaycastManager raycastManager,
+            Camera camera,
+            IInputService inputService,
+            CreationView creationView,
             StateMachine stateMachine,
-            EnvironmentObjectTransformator transformator)
+            TickService tickService)
         {
-            _creator = creator;
-            _positioner = positioner;
+            _staticDataService = staticDataService;
+            _raycastManager = raycastManager;
+            _camera = camera;
+            _inputService = inputService;
+            _creationView = creationView;
             _stateMachine = stateMachine;
-            _transformator = transformator;
+            _tickService = tickService;
         }
 
         public void Enter()
         {
-            _creator.Create();
-            _positioner.SetActive(true);
-            _transformator.SetActive(true);
+            Debug.Log("Enter to creation state");
+
+            _creator = new(_staticDataService);
+            _positioner = new(_creator, _raycastManager, _camera, _inputService);
+            _creatorPresenter = new(_creationView, _creator);
+            _transformator = new(_inputService, _camera);
+
+            _creationView.Show();
+            _tickService.Register(_positioner);
+            Debug.Log("Positioner registred");
 
             _positioner.Completed += OnPositionerCompleted;
+            _creator.Created += OnCreated;
+
+            _creator.Create();
         }
 
         public void Exit()
         {
-            _positioner.SetActive(false);
-            _transformator.SetActive(false);
+            _creationView.Hide();
+            _creatorPresenter.Dispose();
+            _transformator.Dispose();
+            _tickService.Remove(_positioner);
 
             _positioner.Completed -= OnPositionerCompleted;
-            Debug.Log("Change state");
+            _creator.Created -= OnCreated;
         }
 
         private void OnPositionerCompleted() =>
-            _stateMachine.Enter<EnvironmentObjectTransformationState>();
+            _stateMachine.Enter<EnvironmentObjectTransformationState, EnvironmentObject>(_creator.CurrentObject);
+
+        private void OnCreated() =>
+            _transformator.SetObject(_creator.CurrentObject);
     }
 }

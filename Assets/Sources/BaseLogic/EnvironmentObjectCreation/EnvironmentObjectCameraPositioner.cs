@@ -1,4 +1,5 @@
 ﻿using Assets.Sources.Services.InputService;
+using Assets.Sources.Services.TickService;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +17,6 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
         private readonly Camera _camera;
         private readonly IInputService _inputService;
 
-        private bool _isActive;
-
         public EnvironmentObjectCameraPositioner(
             EnvironmentObjectCreator creator,
             ARRaycastManager raycastManager,
@@ -28,8 +27,6 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
             _raycastManager = raycastManager;
             _camera = camera;
             _inputService = inputService;
-
-            _isActive = false;
 
             _inputService.Clicked += OnClicked;
         }
@@ -43,21 +40,15 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 
         public void Tick()
         {
-            if (_creator.CurrentObject == null || _isActive == false)
+            if (_creator.CurrentObject == null)
                 return;
 
             Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
             List<ARRaycastHit> hits = new ();
 
             if (_raycastManager.Raycast(ray, hits, TrackableType.Planes))
-            {
                 _creator.CurrentObject.transform.position = hits[0].pose.position;
-                _creator.CurrentObject.transform.rotation = hits[0].pose.rotation;
-            }
         }
-
-        public void SetActive(bool isActive) =>
-            _isActive = isActive;
 
         private void OnClicked(Vector2 position)
         {

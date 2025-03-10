@@ -4,8 +4,8 @@ using Assets.Sources.BaseLogic;
 using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
 using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
 using Assets.Sources.Services.InputService;
+using Assets.Sources.Services.TickService;
 using Assets.Sources.StaticDataService;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -19,92 +19,57 @@ namespace Assets.Sources.CompositionRoot
         [SerializeField] private CreationView _creationView;
         [SerializeField] private TransformationView _transformationView;
 
-        private StateMachine _stateMachine;
-        private Review _review;
-        private EnvironmentObjectCreator _environmentObjectCreator;
-        private EnvironmentObjectCameraPositioner _creatingEnvironmentObjectCameraPositioner;
-        private EnvironmentObjectTransformator _environmentObjectTranformator;
-        private ReviewPresenter _reviewPresenter;
-        private CreatorPresenter _creatorPresenter;
-        private EnvironmentObjectHandlerPositioner _environmentObjectHandlerPositioner;
-        private TransformationPresenter _transformationPresenter;
+        private TickService _tickService;
+        private IStaticDataService _staticDataService;
+        private IInputService _inputService;
 
-        private List<ITickable> _tickables;
 
         private void Awake()
         {
-            _tickables = new();
-            _stateMachine = new();
+            _tickService = new();
 
-            IStaticDataService staticDataService = new StaticDataService.StaticDataService();
-            staticDataService.Initialize();
-
-            IInputService inputService = new InputService();
-            _tickables.Add(inputService);
-
-            InitializeEnvironmentObjectTransformator(inputService);
-            InitializeReview();
-            InitializeEnviromentObjectCreator(staticDataService, inputService);
-
-
+            InitializeStaticDataService();
+            InitializeInputService();
             InitializeApplicationStateMachine();
         }
 
-        private void OnDestroy() =>
-            _stateMachine.Enter<EndState>();
-
-        private void InitializeReview()
+        private void InitializeStaticDataService()
         {
-            _review = new(_stateMachine);
-            _reviewPresenter = new(_review, _reviewView);
+            _staticDataService = new StaticDataService.StaticDataService();
+            _staticDataService.Initialize();
         }
 
-        private void InitializeEnviromentObjectCreator(IStaticDataService staticDataService, IInputService inputService)
+        private void InitializeInputService()
         {
-            _environmentObjectCreator = new(staticDataService);
-            _creatingEnvironmentObjectCameraPositioner = new(_environmentObjectCreator, _raycastManager, _camera, inputService);
-            _creatorPresenter = new(_creationView, _environmentObjectCreator, _creatingEnvironmentObjectCameraPositioner);
-
-            _tickables.Add(_creatingEnvironmentObjectCameraPositioner);
-        }
-
-        private void InitializeEnvironmentObjectTransformator(IInputService inputService)
-        {
-            _environmentObjectTranformator = new(inputService, _camera, _raycastManager);
-            _environmentObjectHandlerPositioner = new(inputService, _environmentObjectCreator, _raycastManager, _camera);
-            TransformationModel transformationModel = new(_stateMachine);
-            _transformationPresenter = new(transformationModel, _transformationView);
-
+            _inputService = new InputService();
+            _tickService.Register(_inputService);
         }
 
         private void InitializeApplicationStateMachine()
         {
-            ReviewState reviewState = new(_review);
-            EnvironmentObjectCreationState environmentObjectCreationState = new (
-                _environmentObjectCreator,
-                _creatingEnvironmentObjectCameraPositioner,
-                _stateMachine,
-                _environmentObjectTranformator);
-            EnvironmentObjectTransformationState environmentObjectTransformationState = new(_environmentObjectTranformator, _environmentObjectHandlerPositioner, _transformationView);
-            EndState endState = new(
-                _reviewPresenter,
-                _creatingEnvironmentObjectCameraPositioner,
-                _creatorPresenter,
-                _environmentObjectTranformator,
-                _transformationPresenter);
+            StateMachine stateMachine = new();
 
-            _stateMachine.RegisterState(reviewState);
-            _stateMachine.RegisterState(environmentObjectCreationState);
-            _stateMachine.RegisterState(environmentObjectTransformationState);
-            _stateMachine.RegisterState(endState);
+            ReviewState reviewState = new(_reviewView, stateMachine);
+            EnvironmentObjectCreationState environmentObjectCreationState = new(_staticDataService, _raycastManager, _camera, _inputService, _creationView, stateMachine, _tickService);
+            EnvironmentObjectTransformationState environmentObjectTransformationState = new(_inputService, _raycastManager, _camera, _transformationView, stateMachine);
 
-            _stateMachine.Enter<ReviewState>();
+            stateMachine.RegisterState(reviewState);
+            stateMachine.RegisterState(environmentObjectCreationState);
+            stateMachine.RegisterState(environmentObjectTransformationState);
+
+            stateMachine.Enter<ReviewState>();
         }
 
         private void Update()
         {
-            foreach (ITickable tickable in _tickables)
-                tickable.Tick();
+            try
+            {
+                _tickService.Tick();
+            }
+            catch
+            {
+                Debug.Log("Tick exseption-------------------------------------");
+            }
         }
     }
 }

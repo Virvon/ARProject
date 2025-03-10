@@ -13,22 +13,10 @@ namespace Assets.Sources.BaseLogic
             _view = view;
 
             _view.ButtonClicked += OnButtonClicked;
-            _model.ActiveChanged += OnModelActiveChanged;
         }
 
-        public void Dispose()
-        {
+        public void Dispose() =>
             _view.ButtonClicked -= OnButtonClicked;
-            _model.ActiveChanged -= OnModelActiveChanged;
-        }
-
-        private void OnModelActiveChanged(bool isActive)
-        {
-            if (isActive)
-                _view.Show();
-            else
-                _view.Hide();
-        }
 
         private void OnButtonClicked() =>
             _model.MoveNextState();
