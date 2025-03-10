@@ -14,12 +14,14 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 
             _view.HideButtonClicked += OnHideButtonClicked;
             _view.ColorSelectionButtonClicked += OnColorSelectionButtonClicked;
+            _view.DestroyButtonClicked += OnDestroyButtonClicked;
         }
 
         public void Dispose()
         {
             _view.HideButtonClicked -= OnHideButtonClicked;
             _view.ColorSelectionButtonClicked -= OnColorSelectionButtonClicked;
+            _view.DestroyButtonClicked -= OnDestroyButtonClicked;
         }
 
         private void OnHideButtonClicked() =>
@@ -27,5 +29,8 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 
         private void OnColorSelectionButtonClicked() =>
             _model.MoveColorSelectionState();
+
+        private void OnDestroyButtonClicked() =>
+            _model.DestroyEnvironmentObject();
     }
 }

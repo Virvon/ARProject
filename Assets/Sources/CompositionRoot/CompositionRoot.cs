@@ -51,7 +51,7 @@ namespace Assets.Sources.CompositionRoot
         {
             StateMachine stateMachine = new();
 
-            ReviewState reviewState = new(_reviewView, stateMachine);
+            ReviewState reviewState = new(_reviewView, stateMachine, _inputService, _camera);
             EnvironmentObjectCreationState environmentObjectCreationState = new(_staticDataService, _raycastManager, _camera, _inputService, _creationView, stateMachine, _tickService);
             EnvironmentObjectTransformationState environmentObjectTransformationState = new(_inputService, _raycastManager, _camera, _transformationView, stateMachine);
             ColorSelectionState colorSelectionState = new(_inputService, _colorSelectionView, stateMachine);

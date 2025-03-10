@@ -1,5 +1,6 @@
 ﻿using Assets.Sources.ApplicationStateMachine;
 using Assets.Sources.ApplicationStateMachine.States;
+using System;
 
 namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 {
@@ -19,5 +20,11 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 
         public void MoveColorSelectionState() =>
             _stateMachine.Enter<ColorSelectionState, EnvironmentObject.EnvironmentObject>(_environmentObject);
+
+        public void DestroyEnvironmentObject()
+        {
+            _environmentObject.Destroy();
+            _stateMachine.Enter<ReviewState>();
+        }
     }
 }
