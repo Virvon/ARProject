@@ -1,4 +1,5 @@
-﻿using Assets.Sources.StaticDataService;
+﻿using Assets.Sources.BaseLogic.EnvironmentObject;
+using Assets.Sources.StaticDataService;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -12,21 +13,30 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
         private readonly ReadOnlyArray<EnvironmentObjectType> _objectTypes;
         private readonly IStaticDataService _staticDataService;
 
-        private EnvironmentObjectType _currentType;
+        private int _currentObjectIndex;
 
         public EnvironmentObjectCreator(IStaticDataService staticDataService)
         {
             _objectTypes = staticDataService.EnvironmentOcjectsConfigurations.Select(configuration => configuration.Type).ToArray();
             _staticDataService = staticDataService;
 
-            _currentType = _objectTypes[0];
+            _currentObjectIndex = 0;
         }
 
-        public EnvironmentObject CurrentObject { get; private set; }
+        public event Action Created;
+
+        public EnvironmentObject.EnvironmentObject CurrentObject { get; private set; }
 
         public void ChangeObject(bool isNextObject)
         {
-            throw new NotImplementedException();
+            _currentObjectIndex += isNextObject ? 1 : -1;
+
+            if (_currentObjectIndex < 0)
+                _currentObjectIndex = _objectTypes.Count - 1;
+            else if (_currentObjectIndex >= _objectTypes.Count)
+                _currentObjectIndex = 0;
+
+            Create();
         }
 
         public void Create()
@@ -34,12 +44,10 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
             Debug.Log("Created");
 
             if (CurrentObject != null)
-                Object.Destroy(CurrentObject);
+                CurrentObject.Destroy();
 
-            CurrentObject = Object.Instantiate(_staticDataService.GetEnvironmentObject(_currentType).Prefab);
+            CurrentObject = Object.Instantiate(_staticDataService.GetEnvironmentObject(_objectTypes[_currentObjectIndex]).Prefab);
+            Created?.Invoke();
         }
-
-        public void Reset() =>
-            CurrentObject = null;
     }
 }

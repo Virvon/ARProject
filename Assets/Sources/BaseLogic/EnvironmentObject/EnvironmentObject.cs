@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
+namespace Assets.Sources.BaseLogic.EnvironmentObject
 {
     public class EnvironmentObject : MonoBehaviour
     {
@@ -17,6 +17,11 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
                 return;
 
             Gizmos.DrawSphere(x, 0.2f);
+        }
+
+        public void Destroy()
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Assets.Sources.ApplicationStateMachine;
-using Assets.Sources.ApplicationStateMachine.States;
-using Assets.Sources.Services.InputService;
+﻿using Assets.Sources.Services.InputService;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 {
-    public class CreatingEnvironmentObjectPositioner : ITickable, IDisposable
+    public class EnvironmentObjectCameraPositioner : ITickable, IDisposable
     {
         private const float RayCastDistance = 100;
 
@@ -18,7 +16,9 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
         private readonly Camera _camera;
         private readonly IInputService _inputService;
 
-        public CreatingEnvironmentObjectPositioner(
+        private bool _isActive;
+
+        public EnvironmentObjectCameraPositioner(
             EnvironmentObjectCreator creator,
             ARRaycastManager raycastManager,
             Camera camera,
@@ -29,10 +29,12 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
             _camera = camera;
             _inputService = inputService;
 
+            _isActive = false;
+
             _inputService.Clicked += OnClicked;
         }
 
-        public event Action<EnvironmentObject> Completed;
+        public event Action Completed;
 
         public void Dispose()
         {
@@ -41,7 +43,7 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 
         public void Tick()
         {
-            if (_creator.CurrentObject == null)
+            if (_creator.CurrentObject == null || _isActive == false)
                 return;
 
             Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
@@ -54,16 +56,17 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
             }
         }
 
+        public void SetActive(bool isActive) =>
+            _isActive = isActive;
+
         private void OnClicked(Vector2 position)
         {
             Ray ray = _camera.ScreenPointToRay(position);
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo, RayCastDistance)
-                && hitInfo.transform.TryGetComponent(out EnvironmentObject environmentObject))
-            {
-                Completed?.Invoke(environmentObject);
-                _creator.Reset();
-            }
+                && hitInfo.transform.TryGetComponent(out EnvironmentObject.EnvironmentObject environmentObject)
+                && environmentObject == _creator.CurrentObject)
+                Completed?.Invoke();
         }
     }
 }

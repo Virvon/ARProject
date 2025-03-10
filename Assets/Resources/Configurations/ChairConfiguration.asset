@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f39996a0fa5d32949b9b2f730d15429b, type: 3}
-  m_Name: EnviromentObjectConfiguration
+  m_Name: ChairConfiguration
   m_EditorClassIdentifier: 
   Type: 0
   Prefab: {fileID: -5656848147244315745, guid: 32c6e1993da396b47bcbfad4633ef6ac, type: 3}

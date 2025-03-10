@@ -1,4 +1,4 @@
-﻿using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
+﻿using Assets.Sources.BaseLogic.EnvironmentObject;
 using UnityEngine;
 
 namespace Assets.Sources.StaticDataService

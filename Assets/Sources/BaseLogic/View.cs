@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
+namespace Assets.Sources.BaseLogic
 {
     public abstract class View : MonoBehaviour
     {
