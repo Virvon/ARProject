@@ -13,16 +13,19 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
             _view = transformationView;
 
             _view.HideButtonClicked += OnHideButtonClicked;
+            _view.ColorSelectionButtonClicked += OnColorSelectionButtonClicked;
         }
 
         public void Dispose()
         {
             _view.HideButtonClicked -= OnHideButtonClicked;
+            _view.ColorSelectionButtonClicked -= OnColorSelectionButtonClicked;
         }
 
-        private void OnHideButtonClicked()
-        {
-            _model.MoveNextState();
-        }
+        private void OnHideButtonClicked() =>
+            _model.MoveReviewState();
+
+        private void OnColorSelectionButtonClicked() =>
+            _model.MoveColorSelectionState();
     }
 }

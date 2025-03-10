@@ -8,5 +8,6 @@ namespace Assets.Sources.StaticDataService
     {
         public EnvironmentObjectType Type;
         public EnvironmentObject Prefab;
+        public string ColorPropertyName;
     }
 }

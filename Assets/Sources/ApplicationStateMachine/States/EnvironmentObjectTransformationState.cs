@@ -13,7 +13,6 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private readonly Camera _camera;
         private readonly TransformationView _transformationView;
         private readonly StateMachine _stateMachine;
-        private readonly TransformationModel _transformationModel;
 
         private EnvironmentObjectTransformator _transformator;
         private EnvironmentObjectHandlerPositioner _positioner;
@@ -31,8 +30,6 @@ namespace Assets.Sources.ApplicationStateMachine.States
             _camera = camera;
             _transformationView = transformationView;
             _stateMachine = stateMachine;
-
-            _transformationModel = new(_stateMachine);
         }
 
         public void Enter(EnvironmentObject environmentObject)
@@ -41,7 +38,8 @@ namespace Assets.Sources.ApplicationStateMachine.States
 
             _transformator = new(_inputService, _camera);
             _positioner = new(_inputService, _raycastManager, _camera, environmentObject);
-            _transformationPresenter = new(_transformationModel, _transformationView);
+            TransformationModel transformationModel = new(_stateMachine, environmentObject);
+            _transformationPresenter = new(transformationModel, _transformationView);
 
             _transformationView.Show();
             _transformator.SetObject(environmentObject);

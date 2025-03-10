@@ -12,22 +12,27 @@ namespace Assets.Sources.Services.InputService
 
         private bool _isDragged;
         private float _lastDistance;
+        private bool _isActive;
 
         public InputService()
         {
             _isDragged = false;
+
+            SetActive(true);
         }
 
         public void Tick()
         {
-            if (Input.touchCount <= 0)
+            if (Input.touchCount <= 0 || _isActive == false)
                 return;
             else if (Input.touchCount == 1)
                 FirstTouchHandle();
             else
                 SecondTouchHandle();
-            
         }
+
+        public void SetActive(bool isActive) =>
+            _isActive = isActive;
 
         private void SecondTouchHandle()
         {
@@ -62,10 +67,7 @@ namespace Assets.Sources.Services.InputService
                     break;
                 case TouchPhase.Moved:
                     if (_isDragged)
-                    {
-                        Debug.Log("drag");
                         Dragged?.Invoke(touch.position);
-                    }
                     break;
                 case TouchPhase.Ended:
                 case TouchPhase.Canceled:

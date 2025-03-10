@@ -1,6 +1,7 @@
 using Assets.Sources.ApplicationStateMachine;
 using Assets.Sources.ApplicationStateMachine.States;
 using Assets.Sources.BaseLogic;
+using Assets.Sources.BaseLogic.ColorSelection;
 using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
 using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
 using Assets.Sources.Services.InputService;
@@ -18,6 +19,7 @@ namespace Assets.Sources.CompositionRoot
         [SerializeField] private ReviewView _reviewView;
         [SerializeField] private CreationView _creationView;
         [SerializeField] private TransformationView _transformationView;
+        [SerializeField] private ColorSelectionView _colorSelectionView;
 
         private TickService _tickService;
         private IStaticDataService _staticDataService;
@@ -52,10 +54,12 @@ namespace Assets.Sources.CompositionRoot
             ReviewState reviewState = new(_reviewView, stateMachine);
             EnvironmentObjectCreationState environmentObjectCreationState = new(_staticDataService, _raycastManager, _camera, _inputService, _creationView, stateMachine, _tickService);
             EnvironmentObjectTransformationState environmentObjectTransformationState = new(_inputService, _raycastManager, _camera, _transformationView, stateMachine);
+            ColorSelectionState colorSelectionState = new(_inputService, _colorSelectionView, stateMachine);
 
             stateMachine.RegisterState(reviewState);
             stateMachine.RegisterState(environmentObjectCreationState);
             stateMachine.RegisterState(environmentObjectTransformationState);
+            stateMachine.RegisterState(colorSelectionState);
 
             stateMachine.Enter<ReviewState>();
         }

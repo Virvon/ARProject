@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 1
   Prefab: {fileID: 6085932377150577760, guid: 1faa3e4aa4adbea459c1ffe78dd4efa5, type: 3}
+  ColorPropertyName: baseColorFactor

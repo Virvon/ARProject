@@ -10,5 +10,7 @@ namespace Assets.Sources.Services.InputService
         event Action<Vector2> Dragged;
         event Action DragEnded;
         event Action<float> Zoomed;
+
+        void SetActive(bool isActive);
     }
 }
