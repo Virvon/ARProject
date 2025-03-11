@@ -9,13 +9,17 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
         [SerializeField] private Canvas _canvas;
         [SerializeField] private Button _nextEnvironmentObjectButton;
         [SerializeField] private Button _previoustEnvironmentObjectButton;
+        [SerializeField] private Button _hideButton;
 
         public event Action<bool> ChangeButtonClicked;
+        public event Action HideButtonClicked;
 
         public override void Show()
         {
             _nextEnvironmentObjectButton.onClick.AddListener(OnNextEnvironmentObjectButtonClicked);
             _previoustEnvironmentObjectButton.onClick.AddListener(OnPreviousEnvironmentObjectButtonClicked);
+            _hideButton.onClick.AddListener(OnHideButtonClicked);
+
             _canvas.enabled = true;
         }
 
@@ -23,6 +27,8 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
         {
             _nextEnvironmentObjectButton.onClick.RemoveListener(OnNextEnvironmentObjectButtonClicked);
             _previoustEnvironmentObjectButton.onClick.RemoveListener(OnPreviousEnvironmentObjectButtonClicked);
+            _hideButton.onClick.RemoveListener(OnHideButtonClicked);
+
             _canvas.enabled = false;
         }
 
@@ -31,5 +37,8 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 
         private void OnNextEnvironmentObjectButtonClicked() =>
             ChangeButtonClicked?.Invoke(true);
+
+        private void OnHideButtonClicked() =>
+            HideButtonClicked?.Invoke();
     }
 }

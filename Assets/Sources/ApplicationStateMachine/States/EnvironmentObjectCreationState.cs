@@ -23,8 +23,8 @@ namespace Assets.Sources.ApplicationStateMachine.States
 
         EnvironmentObjectCameraPositioner _positioner;
         CreatorPresenter _creatorPresenter;
-        EnvironmentObjectCreator _creator;
         EnvironmentObjectTransformator _transformator;
+        CreationModel _creationModel;
 
         public EnvironmentObjectCreationState(
             IStaticDataService staticDataService,
@@ -50,20 +50,17 @@ namespace Assets.Sources.ApplicationStateMachine.States
         {
             Debug.Log("Enter to creation state");
 
-            _creator = new(_staticDataService);
-            _positioner = new(_creator, _raycastManager, _camera, _inputService, _pointer);
-            _creatorPresenter = new(_creationView, _creator);
+            EnvironmentObjectCreator creator = new(_staticDataService);
+            _positioner = new(creator, _raycastManager, _camera, _inputService, _pointer);
             _transformator = new(_inputService, _camera);
+            _creationModel = new(_stateMachine, creator, _positioner, _transformator);
+            _creatorPresenter = new(_creationView, _creationModel);
 
             _creationView.Show();
             _tickService.Register(_positioner);
             _pointer.gameObject.SetActive(true);
-            Debug.Log("Positioner registred");
 
-            _positioner.Completed += OnPositionerCompleted;
-            _creator.Created += OnCreated;
-
-            _creator.Create();
+            creator.Create();
         }
 
         public void Exit()
@@ -71,17 +68,9 @@ namespace Assets.Sources.ApplicationStateMachine.States
             _creationView.Hide();
             _creatorPresenter.Dispose();
             _transformator.Dispose();
+            _creationModel.Dispose();
             _tickService.Remove(_positioner);
             _pointer.gameObject.SetActive(false);
-
-            _positioner.Completed -= OnPositionerCompleted;
-            _creator.Created -= OnCreated;
         }
-
-        private void OnPositionerCompleted() =>
-            _stateMachine.Enter<EnvironmentObjectTransformationState, EnvironmentObject>(_creator.CurrentObject);
-
-        private void OnCreated() =>
-            _transformator.SetObject(_creator.CurrentObject);
     }
 }
