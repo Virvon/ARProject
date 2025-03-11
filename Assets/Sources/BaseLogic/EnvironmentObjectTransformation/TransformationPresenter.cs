@@ -15,6 +15,10 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
             _view.HideButtonClicked += OnHideButtonClicked;
             _view.ColorSelectionButtonClicked += OnColorSelectionButtonClicked;
             _view.DestroyButtonClicked += OnDestroyButtonClicked;
+            _view.AnimationButtonClicked += OnAnimationButtonClicked;
+
+            if (_model.IsAnimated)
+                _view.SetAnimationButtonActive(true);
         }
 
         public void Dispose()
@@ -22,6 +26,7 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
             _view.HideButtonClicked -= OnHideButtonClicked;
             _view.ColorSelectionButtonClicked -= OnColorSelectionButtonClicked;
             _view.DestroyButtonClicked -= OnDestroyButtonClicked;
+            _view.AnimationButtonClicked -= OnAnimationButtonClicked;
         }
 
         private void OnHideButtonClicked() =>
@@ -32,5 +37,11 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 
         private void OnDestroyButtonClicked() =>
             _model.DestroyEnvironmentObject();
+
+        private void OnAnimationButtonClicked()
+        {
+            if (_model.IsAnimated)
+                _model.ShowAnimation();
+        }
     }
 }
