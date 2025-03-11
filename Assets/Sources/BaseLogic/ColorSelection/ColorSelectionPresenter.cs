@@ -13,7 +13,7 @@ namespace Assets.Sources.BaseLogic.ColorSelection
             _model = colorSelection;
             _view = colorSelectionView;
 
-            _view.SetColor(_model.EnvironmentObject.Color);
+            _view.SetColor(_model.EnvironmentObject.ColorChanger.Color);
 
             _view.ColorChanged += OnColorChanged;
             _view.HideButtonClicked += OnHideButtonClicked;

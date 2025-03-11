@@ -4,5 +4,7 @@
     {
         Chair,
         Plant,
+        Mixer,
+        Robot,
     }
 }
