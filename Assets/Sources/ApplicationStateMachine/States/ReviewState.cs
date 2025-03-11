@@ -11,7 +11,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private readonly IInputService _inputService;
         private readonly Camera _camera;
 
-        private Review _review;
+        private ReviewModel _review;
         private ReviewPresenter _reviewPresenter;
 
         public ReviewState(ReviewView reviewView, StateMachine stateMachine, IInputService inputService, Camera camera)

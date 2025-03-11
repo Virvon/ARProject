@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Sources.BaseLogic
 {
-    public class Review : IDisposable
+    public class ReviewModel : IDisposable
     {
         private const float RaycastDistance = 100;
 
@@ -14,7 +14,7 @@ namespace Assets.Sources.BaseLogic
         private readonly IInputService _inputService;
         private readonly Camera _camera;
 
-        public Review(StateMachine stateMachine, IInputService inputService, Camera camera)
+        public ReviewModel(StateMachine stateMachine, IInputService inputService, Camera camera)
         {
             _stateMachine = stateMachine;
             _inputService = inputService;
@@ -23,12 +23,13 @@ namespace Assets.Sources.BaseLogic
             _camera = camera;
         }
 
-        public void Dispose()
-        {
+        public void Dispose() =>
             _inputService.Clicked -= OnClicked;
-        }
 
-        public void MoveNextState() =>
+        public void MoveInformationState() =>
+            _stateMachine.Enter<InformationState>();
+
+        public void MoveCreationState() =>
             _stateMachine.Enter<EnvironmentObjectCreationState>();
 
         private void OnClicked(Vector2 position)
