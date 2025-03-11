@@ -2,6 +2,7 @@ using Assets.Sources.ApplicationStateMachine;
 using Assets.Sources.ApplicationStateMachine.States;
 using Assets.Sources.BaseLogic;
 using Assets.Sources.BaseLogic.ColorSelection;
+using Assets.Sources.BaseLogic.EnvironmentObject;
 using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
 using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
 using Assets.Sources.Services.InputService;
@@ -20,10 +21,12 @@ namespace Assets.Sources.CompositionRoot
         [SerializeField] private CreationView _creationView;
         [SerializeField] private TransformationView _transformationView;
         [SerializeField] private ColorSelectionView _colorSelectionView;
+        [SerializeField] private Pointer _pointerPrefab;
 
         private TickService _tickService;
         private IStaticDataService _staticDataService;
         private IInputService _inputService;
+        private Pointer _pointer;
 
 
         private void Awake()
@@ -32,8 +35,12 @@ namespace Assets.Sources.CompositionRoot
 
             InitializeStaticDataService();
             InitializeInputService();
+            InitializePointer();
             InitializeApplicationStateMachine();
         }
+
+        private void InitializePointer() =>
+            _pointer = Instantiate(_pointerPrefab);
 
         private void InitializeStaticDataService()
         {
@@ -52,9 +59,23 @@ namespace Assets.Sources.CompositionRoot
             StateMachine stateMachine = new();
 
             ReviewState reviewState = new(_reviewView, stateMachine, _inputService, _camera);
-            EnvironmentObjectCreationState environmentObjectCreationState = new(_staticDataService, _raycastManager, _camera, _inputService, _creationView, stateMachine, _tickService);
-            EnvironmentObjectTransformationState environmentObjectTransformationState = new(_inputService, _raycastManager, _camera, _transformationView, stateMachine);
-            ColorSelectionState colorSelectionState = new(_inputService, _colorSelectionView, stateMachine);
+            EnvironmentObjectCreationState environmentObjectCreationState = new(
+                _staticDataService,
+                _raycastManager,
+                _camera,
+                _inputService,
+                _creationView,
+                stateMachine,
+                _tickService,
+                _pointer);
+            EnvironmentObjectTransformationState environmentObjectTransformationState = new(
+                _inputService,
+                _raycastManager,
+                _camera,
+                _transformationView,
+                stateMachine,
+                _pointer);
+            ColorSelectionState colorSelectionState = new(_inputService, _colorSelectionView, stateMachine, _pointer);
 
             stateMachine.RegisterState(reviewState);
             stateMachine.RegisterState(environmentObjectCreationState);

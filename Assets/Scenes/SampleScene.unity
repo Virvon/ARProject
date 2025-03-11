@@ -2155,6 +2155,7 @@ MonoBehaviour:
   _creationView: {fileID: 1509881922}
   _transformationView: {fileID: 1985308838}
   _colorSelectionView: {fileID: 605263002}
+  _pointerPrefab: {fileID: -3174943844731297685, guid: aa6449f945bcb4f44a076803e8576a3a, type: 3}
 --- !u!4 &917326166
 Transform:
   m_ObjectHideFlags: 0

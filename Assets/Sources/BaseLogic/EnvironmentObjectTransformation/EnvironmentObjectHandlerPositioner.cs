@@ -1,4 +1,5 @@
-﻿using Assets.Sources.Services.InputService;
+﻿using Assets.Sources.BaseLogic.EnvironmentObject;
+using Assets.Sources.Services.InputService;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
         private readonly ARRaycastManager _raycastManager;
         private readonly Camera _camera;
         private readonly EnvironmentObject.EnvironmentObject _environmentObject;
+        private readonly Pointer _pointer;
 
         private bool _needReplaced;
 
@@ -21,16 +23,20 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
             IInputService inputService,
             ARRaycastManager raycastManager,
             Camera camera,
-            EnvironmentObject.EnvironmentObject environmentObject)
+            EnvironmentObject.EnvironmentObject environmentObject,
+            Pointer pointer)
         {
             _inputService = inputService;
             _raycastManager = raycastManager;
             _camera = camera;
+            _environmentObject = environmentObject;
+            _pointer = pointer;
 
             _inputService.Clicked += OnClicked;
             _inputService.Dragged += OnDragged;
             _inputService.DragEnded += OnDragEnded;
-            _environmentObject = environmentObject;
+
+            _pointer.transform.position = _environmentObject.transform.position;
         }
 
         public void Dispose()
@@ -50,14 +56,19 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
                 _needReplaced = true;
         }
 
-        private void OnDragged(Vector2 position)
+        private void OnDragged(Vector2 handlePosition)
         {
             if (_needReplaced)
             {
                 List<ARRaycastHit> hits = new();
 
-                if (_raycastManager.Raycast(position, hits))
-                    _environmentObject.transform.position = hits[0].pose.position;
+                if (_raycastManager.Raycast(handlePosition, hits))
+                {
+                    Vector3 position = hits[0].pose.position;
+
+                    _environmentObject.transform.position = position;
+                    _pointer.transform.position = position;
+                }
             }
         }
 

@@ -12,11 +12,15 @@ namespace Assets.Sources.BaseLogic.EnvironmentObject
         [SerializeField] private ColorChanger _colorChanger;
 
         private float _scale;
+        public bool IsActive { get; private set; }
 
         public ColorChanger ColorChanger => _colorChanger;
 
-        private void Start() =>
+        private void Start()
+        {
             _scale = 1;
+            gameObject.SetActive(false);
+        }
 
         public void Initialize(string colorPropertyName) =>
             _colorChanger.Initialize(colorPropertyName);
@@ -26,6 +30,15 @@ namespace Assets.Sources.BaseLogic.EnvironmentObject
 
         public void Destroy() =>
             Destroy(gameObject);
+
+        public void SetActive(bool isActive)
+        {
+            if (isActive == IsActive)
+                return;
+
+            IsActive = isActive;
+            gameObject.SetActive(IsActive);
+        }
 
         public void Scale(float value)
         {

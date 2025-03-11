@@ -49,7 +49,7 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 
         private void OnClicked(Vector2 position)
         {
-            if (_environmentObject == null)
+            if (_environmentObject == null || (_environmentObject != null && _environmentObject.IsActive == false))
                 return;
 
             Ray ray = _camera.ScreenPointToRay(position);
@@ -85,7 +85,12 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
             }
         }
 
-        private void OnZoomed(float delta) =>
+        private void OnZoomed(float delta)
+        {
+            if (_environmentObject == null || (_environmentObject != null && _environmentObject.IsActive == false))
+                return;
+
             _environmentObject.Scale(delta);
+        }
     }
 }

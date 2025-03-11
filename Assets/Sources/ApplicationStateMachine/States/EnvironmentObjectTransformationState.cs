@@ -13,6 +13,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private readonly Camera _camera;
         private readonly TransformationView _transformationView;
         private readonly StateMachine _stateMachine;
+        private readonly Pointer _pointer;
 
         private EnvironmentObjectTransformator _transformator;
         private EnvironmentObjectHandlerPositioner _positioner;
@@ -23,13 +24,15 @@ namespace Assets.Sources.ApplicationStateMachine.States
             ARRaycastManager raycastManager,
             Camera camera,
             TransformationView transformationView,
-            StateMachine stateMachine)
+            StateMachine stateMachine,
+            Pointer pointer)
         {
             _inputService = inputService;
             _raycastManager = raycastManager;
             _camera = camera;
             _transformationView = transformationView;
             _stateMachine = stateMachine;
+            _pointer = pointer;
         }
 
         public void Enter(EnvironmentObject environmentObject)
@@ -37,12 +40,14 @@ namespace Assets.Sources.ApplicationStateMachine.States
             Debug.Log("Enter transformation state");
 
             _transformator = new(_inputService, _camera);
-            _positioner = new(_inputService, _raycastManager, _camera, environmentObject);
+            _positioner = new(_inputService, _raycastManager, _camera, environmentObject, _pointer);
             TransformationModel transformationModel = new(_stateMachine, environmentObject);
             _transformationPresenter = new(transformationModel, _transformationView);
 
             _transformationView.Show();
             _transformator.SetObject(environmentObject);
+            _pointer.SetState(true);
+            _pointer.gameObject.SetActive(true);
 
             Debug.Log("Finis entered to transformation state");
         }
@@ -53,6 +58,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
             _positioner.Dispose();
             _transformationPresenter.Dispose();
             _transformationView.Hide();
+            _pointer.gameObject.SetActive(false);
         }
     }
 }

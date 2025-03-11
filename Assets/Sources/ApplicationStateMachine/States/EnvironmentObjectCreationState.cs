@@ -19,6 +19,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private readonly CreationView _creationView;
         private readonly StateMachine _stateMachine;
         private readonly TickService _tickService;
+        private readonly Pointer _pointer;
 
         EnvironmentObjectCameraPositioner _positioner;
         CreatorPresenter _creatorPresenter;
@@ -32,7 +33,8 @@ namespace Assets.Sources.ApplicationStateMachine.States
             IInputService inputService,
             CreationView creationView,
             StateMachine stateMachine,
-            TickService tickService)
+            TickService tickService,
+            Pointer pointer)
         {
             _staticDataService = staticDataService;
             _raycastManager = raycastManager;
@@ -41,6 +43,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
             _creationView = creationView;
             _stateMachine = stateMachine;
             _tickService = tickService;
+            _pointer = pointer;
         }
 
         public void Enter()
@@ -48,12 +51,13 @@ namespace Assets.Sources.ApplicationStateMachine.States
             Debug.Log("Enter to creation state");
 
             _creator = new(_staticDataService);
-            _positioner = new(_creator, _raycastManager, _camera, _inputService);
+            _positioner = new(_creator, _raycastManager, _camera, _inputService, _pointer);
             _creatorPresenter = new(_creationView, _creator);
             _transformator = new(_inputService, _camera);
 
             _creationView.Show();
             _tickService.Register(_positioner);
+            _pointer.gameObject.SetActive(true);
             Debug.Log("Positioner registred");
 
             _positioner.Completed += OnPositionerCompleted;
@@ -68,6 +72,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
             _creatorPresenter.Dispose();
             _transformator.Dispose();
             _tickService.Remove(_positioner);
+            _pointer.gameObject.SetActive(false);
 
             _positioner.Completed -= OnPositionerCompleted;
             _creator.Created -= OnCreated;
