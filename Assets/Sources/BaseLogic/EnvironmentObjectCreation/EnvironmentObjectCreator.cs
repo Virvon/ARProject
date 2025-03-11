@@ -27,8 +27,6 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 
         public EnvironmentObject.EnvironmentObject CurrentObject { get; private set; }
 
-        
-
         public void ChangeObject(bool isNextObject)
         {
             _currentObjectIndex += isNextObject ? 1 : -1;

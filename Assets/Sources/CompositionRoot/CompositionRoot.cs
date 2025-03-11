@@ -30,7 +30,6 @@ namespace Assets.Sources.CompositionRoot
         private IInputService _inputService;
         private Pointer _pointer;
 
-
         private void Awake()
         {
             _tickService = new();
@@ -62,6 +61,7 @@ namespace Assets.Sources.CompositionRoot
 
             InformationState informationState = new(stateMachine, _informationView);
             ReviewState reviewState = new(_reviewView, stateMachine, _inputService, _camera);
+
             EnvironmentObjectCreationState environmentObjectCreationState = new(
                 _staticDataService,
                 _raycastManager,
@@ -71,6 +71,7 @@ namespace Assets.Sources.CompositionRoot
                 stateMachine,
                 _tickService,
                 _pointer);
+
             EnvironmentObjectTransformationState environmentObjectTransformationState = new(
                 _inputService,
                 _raycastManager,
@@ -78,6 +79,7 @@ namespace Assets.Sources.CompositionRoot
                 _transformationView,
                 stateMachine,
                 _pointer);
+
             ColorSelectionState colorSelectionState = new(_inputService, _colorSelectionView, stateMachine, _pointer);
 
             stateMachine.RegisterState(informationState);

@@ -19,7 +19,7 @@ namespace Assets.Sources.BaseLogic.EnvironmentObject
         private void Start()
         {
             _scale = 1;
-            gameObject.SetActive(false);
+            IsActive = true;
         }
 
         public void Initialize(string colorPropertyName) =>
