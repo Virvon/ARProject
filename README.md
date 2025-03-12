@@ -1,7 +1,7 @@
 # Android AR Application
 Это Android-приложение, разработанное с использованием Unity и AR Foundation, которое позволяет просматривать 3D-модели в дополненной реальности.
 
-![demonstration](https://github.com/Virvon/ARProject/blob/master/Demonstrations/Demonstration.gif width="200" height="300")
+<img src="https://github.com/Virvon/ARProject/blob/master/Demonstrations/Demonstration.gif" width="200" height="440"/>
 
 ## Управление
 - Чтобы повернуть объект, проведите пальцем вокруг него. 
