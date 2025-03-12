@@ -26,7 +26,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
         EnvironmentObjectTransformator _transformator;
         CreationModel _creationModel;
 
-        public EnvironmentObjectCreationState(StateMachine stateMachine, SharedBundle sharedBundle)
+        public EnvironmentObjectCreationState(StateMachine stateMachine, SharedBundle.SharedBundle sharedBundle)
         {
             _stateMachine = stateMachine;
             _staticDataService = sharedBundle.Get<IStaticDataService>(SharedBundleKeys.StaticDataService);

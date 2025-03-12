@@ -15,7 +15,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private ReviewModel _review;
         private ReviewPresenter _reviewPresenter;
 
-        public ReviewState(StateMachine stateMachine, SharedBundle sharedBundle)
+        public ReviewState(StateMachine stateMachine, SharedBundle.SharedBundle sharedBundle)
         {
             _stateMachine = stateMachine;
             _reviewView = sharedBundle.Get<ReviewView>(SharedBundleKeys.ReviewView);

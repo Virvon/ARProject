@@ -30,7 +30,7 @@ namespace Assets.Sources.CompositionRoot
         private IStaticDataService _staticDataService;
         private IInputService _inputService;
         private Pointer _pointer;
-        private SharedBundle _sharedBundle;
+        private SharedBundle.SharedBundle _sharedBundle;
 
         private void Awake()
         {

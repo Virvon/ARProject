@@ -2,7 +2,6 @@
 using Assets.Sources.BaseLogic.EnvironmentObject;
 using Assets.Sources.Services.InputService;
 using Assets.Sources.SharedBundle;
-using UnityEngine;
 
 namespace Assets.Sources.ApplicationStateMachine.States
 {
@@ -15,7 +14,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
 
         private ColorSelectionPresenter _colorSelectionPresenter;
 
-        public ColorSelectionState(StateMachine stateMachine, SharedBundle sharedBundle)
+        public ColorSelectionState(StateMachine stateMachine, SharedBundle.SharedBundle sharedBundle)
         {
             _stateMachine = stateMachine;
             _inputService = sharedBundle.Get<IInputService>(SharedBundleKeys.InputService);

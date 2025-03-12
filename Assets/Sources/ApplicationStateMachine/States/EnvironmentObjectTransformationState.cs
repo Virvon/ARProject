@@ -20,7 +20,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private EnvironmentObjectHandlerPositioner _positioner;
         private TransformationPresenter _transformationPresenter;
 
-        public EnvironmentObjectTransformationState(StateMachine stateMachine, SharedBundle sharedBundle)
+        public EnvironmentObjectTransformationState(StateMachine stateMachine, SharedBundle.SharedBundle sharedBundle)
         {
             _stateMachine = stateMachine;
             _inputService = sharedBundle.Get<IInputService>(SharedBundleKeys.InputService);

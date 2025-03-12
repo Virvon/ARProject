@@ -10,7 +10,7 @@ namespace Assets.Sources.ApplicationStateMachine.States
 
         private InformationPresenter _informationPresenter;
 
-        public InformationState(StateMachine stateMachine, SharedBundle sharedBundle)
+        public InformationState(StateMachine stateMachine, SharedBundle.SharedBundle sharedBundle)
         {
             _stateMachine = stateMachine;
             _informationView = sharedBundle.Get<InformationView>(SharedBundleKeys.InformationView);
