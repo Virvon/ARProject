@@ -1,5 +1,5 @@
 ﻿using Assets.Sources.BaseLogic.Information;
-using Assets.Sources.LoadingTree.SharedBundle;
+using Assets.Sources.SharedBundle;
 
 namespace Assets.Sources.ApplicationStateMachine.States
 {

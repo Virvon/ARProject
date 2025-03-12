@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.Sources.LoadingTree.SharedBundle
+namespace Assets.Sources.SharedBundle
 {
     public class SharedBundle
     {

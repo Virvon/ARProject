@@ -1,4 +1,4 @@
-﻿namespace Assets.Sources.LoadingTree.SharedBundle
+﻿namespace Assets.Sources.SharedBundle
 {
     public class SharedBundleKeys
     {
