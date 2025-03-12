@@ -7,7 +7,8 @@ namespace Assets.Sources.StaticDataService
     {
         ReadOnlyArray<EnviromentObjectConfiguration> EnvironmentOcjectsConfigurations { get; }
 
-        EnviromentObjectConfiguration GetEnvironmentObject(EnvironmentObjectType type);
+        EnviromentObjectConfiguration GetEnvironmentObjectConfiguration(EnvironmentObjectType type);
+
         void Initialize();
     }
 }

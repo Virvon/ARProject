@@ -14,10 +14,10 @@ namespace Assets.Sources.StaticDataService
 
         public void Initialize()
         {
-            _environmentObjectsConfigurations = Resources.LoadAll<EnviromentObjectConfiguration>(ConfigurationPath.EnvironmentObjects).ToDictionary(value => value.Type, value => value);
+            _environmentObjectsConfigurations = Resources.LoadAll<EnviromentObjectConfiguration>(ConfigurationsPath.EnvironmentObjects).ToDictionary(value => value.Type, value => value);
         }
 
-        public EnviromentObjectConfiguration GetEnvironmentObject(EnvironmentObjectType type) =>
+        public EnviromentObjectConfiguration GetEnvironmentObjectConfiguration(EnvironmentObjectType type) =>
             _environmentObjectsConfigurations.TryGetValue(type, out EnviromentObjectConfiguration configuration) ? configuration : null;
     }
 }

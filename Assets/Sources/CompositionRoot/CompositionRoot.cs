@@ -6,6 +6,7 @@ using Assets.Sources.BaseLogic.EnvironmentObject;
 using Assets.Sources.BaseLogic.EnvironmentObjectCreation;
 using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
 using Assets.Sources.BaseLogic.Information;
+using Assets.Sources.LoadingTree.SharedBundle;
 using Assets.Sources.Services.InputService;
 using Assets.Sources.Services.TickService;
 using Assets.Sources.StaticDataService;
@@ -29,14 +30,15 @@ namespace Assets.Sources.CompositionRoot
         private IStaticDataService _staticDataService;
         private IInputService _inputService;
         private Pointer _pointer;
+        private SharedBundle _sharedBundle;
 
         private void Awake()
         {
-            _tickService = new();
-
+            InitializeTickService();
             InitializeStaticDataService();
             InitializeInputService();
             InitializePointer();
+            InitializeSharedBundle();
             InitializeApplicationStateMachine();
         }
 
@@ -59,48 +61,42 @@ namespace Assets.Sources.CompositionRoot
         {
             StateMachine stateMachine = new();
 
-            InformationState informationState = new(stateMachine, _informationView);
-            ReviewState reviewState = new(_reviewView, stateMachine, _inputService, _camera);
+            InformationState informationState = new(stateMachine, _sharedBundle);
+            ReviewState reviewState = new(stateMachine, _sharedBundle);
+            EnvironmentObjectCreationState environmentObjectCreationState = new(stateMachine, _sharedBundle);
+            EnvironmentObjectTransformationState environmentObjectTransformationState = new(stateMachine, _sharedBundle);
+            ColorSelectionState colorSelectionState = new(stateMachine, _sharedBundle);
 
-            EnvironmentObjectCreationState environmentObjectCreationState = new(
-                _staticDataService,
-                _raycastManager,
-                _camera,
-                _inputService,
-                _creationView,
-                stateMachine,
-                _tickService,
-                _pointer);
-
-            EnvironmentObjectTransformationState environmentObjectTransformationState = new(
-                _inputService,
-                _raycastManager,
-                _camera,
-                _transformationView,
-                stateMachine,
-                _pointer);
-
-            ColorSelectionState colorSelectionState = new(_inputService, _colorSelectionView, stateMachine, _pointer);
-
-            stateMachine.RegisterState(informationState);
-            stateMachine.RegisterState(reviewState);
-            stateMachine.RegisterState(environmentObjectCreationState);
-            stateMachine.RegisterState(environmentObjectTransformationState);
-            stateMachine.RegisterState(colorSelectionState);
+            stateMachine.Register(informationState);
+            stateMachine.Register(reviewState);
+            stateMachine.Register(environmentObjectCreationState);
+            stateMachine.Register(environmentObjectTransformationState);
+            stateMachine.Register(colorSelectionState);
 
             stateMachine.Enter<InformationState>();
         }
 
-        private void Update()
+        private void InitializeTickService() =>
+            _tickService = new();
+
+        private void InitializeSharedBundle()
         {
-            try
-            {
-                _tickService.Tick();
-            }
-            catch
-            {
-                Debug.Log("Tick exseption-------------------------------------");
-            }
+            _sharedBundle = new();
+
+            _sharedBundle.Add(SharedBundleKeys.RaycastManager, _raycastManager);
+            _sharedBundle.Add(SharedBundleKeys.StaticDataService, _staticDataService);
+            _sharedBundle.Add(SharedBundleKeys.Camera, _camera);
+            _sharedBundle.Add(SharedBundleKeys.InputService, _inputService);
+            _sharedBundle.Add(SharedBundleKeys.CreationView, _creationView);
+            _sharedBundle.Add(SharedBundleKeys.TickService, _tickService);
+            _sharedBundle.Add(SharedBundleKeys.Pointer, _pointer);
+            _sharedBundle.Add(SharedBundleKeys.ColorSelectionView, _colorSelectionView);
+            _sharedBundle.Add(SharedBundleKeys.TransformatinView, _transformationView);
+            _sharedBundle.Add(SharedBundleKeys.InformationView, _informationView);
+            _sharedBundle.Add(SharedBundleKeys.ReviewView, _reviewView);
         }
+
+        private void Update() =>
+            _tickService.Tick();
     }
 }

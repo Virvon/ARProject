@@ -1,4 +1,5 @@
 ﻿using Assets.Sources.BaseLogic.Information;
+using Assets.Sources.LoadingTree.SharedBundle;
 
 namespace Assets.Sources.ApplicationStateMachine.States
 {
@@ -9,10 +10,10 @@ namespace Assets.Sources.ApplicationStateMachine.States
 
         private InformationPresenter _informationPresenter;
 
-        public InformationState(StateMachine stateMachine, InformationView informationView)
+        public InformationState(StateMachine stateMachine, SharedBundle sharedBundle)
         {
             _stateMachine = stateMachine;
-            _informationView = informationView;
+            _informationView = sharedBundle.Get<InformationView>(SharedBundleKeys.InformationView);
         }
 
         public void Enter()

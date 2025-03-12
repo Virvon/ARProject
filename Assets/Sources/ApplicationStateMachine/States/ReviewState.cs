@@ -1,4 +1,5 @@
 ﻿using Assets.Sources.BaseLogic;
+using Assets.Sources.LoadingTree.SharedBundle;
 using Assets.Sources.Services.InputService;
 using UnityEngine;
 
@@ -14,12 +15,12 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private ReviewModel _review;
         private ReviewPresenter _reviewPresenter;
 
-        public ReviewState(ReviewView reviewView, StateMachine stateMachine, IInputService inputService, Camera camera)
+        public ReviewState(StateMachine stateMachine, SharedBundle sharedBundle)
         {
-            _reviewView = reviewView;
             _stateMachine = stateMachine;
-            _inputService = inputService;
-            _camera = camera;
+            _reviewView = sharedBundle.Get<ReviewView>(SharedBundleKeys.ReviewView);
+            _inputService = sharedBundle.Get<IInputService>(SharedBundleKeys.InputService);
+            _camera = sharedBundle.Get<Camera>(SharedBundleKeys.Camera);
         }
 
         public void Enter()

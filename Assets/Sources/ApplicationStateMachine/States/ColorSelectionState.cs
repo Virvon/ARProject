@@ -1,5 +1,6 @@
 ﻿using Assets.Sources.BaseLogic.ColorSelection;
 using Assets.Sources.BaseLogic.EnvironmentObject;
+using Assets.Sources.LoadingTree.SharedBundle;
 using Assets.Sources.Services.InputService;
 using UnityEngine;
 
@@ -14,18 +15,16 @@ namespace Assets.Sources.ApplicationStateMachine.States
 
         private ColorSelectionPresenter _colorSelectionPresenter;
 
-        public ColorSelectionState(IInputService inputService, ColorSelectionView colorSelectionView, StateMachine stateMachine, Pointer pointer)
+        public ColorSelectionState(StateMachine stateMachine, SharedBundle sharedBundle)
         {
-            _inputService = inputService;
-            _colorSelectionView = colorSelectionView;
             _stateMachine = stateMachine;
-            _pointer = pointer;
+            _inputService = sharedBundle.Get<IInputService>(SharedBundleKeys.InputService);
+            _colorSelectionView = sharedBundle.Get<ColorSelectionView>(SharedBundleKeys.ColorSelectionView);
+            _pointer = sharedBundle.Get<Pointer>(SharedBundleKeys.Pointer);
         }
 
         public void Enter(EnvironmentObject environmentObject)
         {
-            Debug.Log("Enter color selection state");
-
             ColorSelection colorSelection = new(environmentObject, _stateMachine);
             _colorSelectionPresenter = new(colorSelection, _colorSelectionView);
 

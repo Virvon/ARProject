@@ -41,12 +41,10 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectCreation
 
         public void Create()
         {
-            Debug.Log("Created");
-
             if (CurrentObject != null)
                 CurrentObject.Destroy();
 
-            EnviromentObjectConfiguration configuration = _staticDataService.GetEnvironmentObject(_objectTypes[_currentObjectIndex]);
+            EnviromentObjectConfiguration configuration = _staticDataService.GetEnvironmentObjectConfiguration(_objectTypes[_currentObjectIndex]);
 
             CurrentObject = Object.Instantiate(configuration.Prefab);
             CurrentObject.Initialize(configuration.ColorPropertyName);

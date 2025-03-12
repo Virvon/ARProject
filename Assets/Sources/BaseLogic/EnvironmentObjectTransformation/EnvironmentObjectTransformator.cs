@@ -39,7 +39,6 @@ namespace Assets.Sources.BaseLogic.EnvironmentObjectTransformation
 
         public void SetObject(EnvironmentObject.EnvironmentObject environmentObject)
         {
-            Debug.Log("Transformator object changed");
             _environmentObject = environmentObject;
             _needRotated = false;
         }

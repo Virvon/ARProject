@@ -15,32 +15,32 @@ namespace Assets.Sources.ApplicationStateMachine
         public void Enter<TState>()
             where TState : class, IState
         {
-            TState state = ChangeState<TState>();
+            TState state = Change<TState>();
             state.Enter();
         }
 
         public void Enter<TState, TPayload>(TPayload payload)
             where TState : class, IPayloadState<TPayload>
         {
-            TState state = ChangeState<TState>();
+            TState state = Change<TState>();
             state.Enter(payload);
         }
 
-        public void RegisterState<TState>(TState state)
+        public void Register<TState>(TState state)
             where TState : IExitableState =>
             _states.Add(typeof(TState), state);
 
-        private TState GetState<TState>()
+        private TState Get<TState>()
             where TState : class, IExitableState =>
                 _states[typeof(TState)] as TState;
 
-        private TState ChangeState<TState>()
+        private TState Change<TState>()
             where TState : class, IExitableState
         {
             if (_currentState != null)
                 _currentState.Exit();
 
-            TState state = GetState<TState>();
+            TState state = Get<TState>();
 
             _currentState = state;
 

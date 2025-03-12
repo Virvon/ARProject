@@ -1,5 +1,6 @@
 ﻿using Assets.Sources.BaseLogic.EnvironmentObject;
 using Assets.Sources.BaseLogic.EnvironmentObjectTransformation;
+using Assets.Sources.LoadingTree.SharedBundle;
 using Assets.Sources.Services.InputService;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -19,26 +20,18 @@ namespace Assets.Sources.ApplicationStateMachine.States
         private EnvironmentObjectHandlerPositioner _positioner;
         private TransformationPresenter _transformationPresenter;
 
-        public EnvironmentObjectTransformationState(
-            IInputService inputService,
-            ARRaycastManager raycastManager,
-            Camera camera,
-            TransformationView transformationView,
-            StateMachine stateMachine,
-            Pointer pointer)
+        public EnvironmentObjectTransformationState(StateMachine stateMachine, SharedBundle sharedBundle)
         {
-            _inputService = inputService;
-            _raycastManager = raycastManager;
-            _camera = camera;
-            _transformationView = transformationView;
             _stateMachine = stateMachine;
-            _pointer = pointer;
+            _inputService = sharedBundle.Get<IInputService>(SharedBundleKeys.InputService);
+            _raycastManager = sharedBundle.Get<ARRaycastManager>(SharedBundleKeys.RaycastManager);
+            _camera = sharedBundle.Get<Camera>(SharedBundleKeys.Camera);
+            _transformationView = sharedBundle.Get<TransformationView>(SharedBundleKeys.TransformatinView);
+            _pointer = sharedBundle.Get<Pointer>(SharedBundleKeys.Pointer);
         }
 
         public void Enter(EnvironmentObject environmentObject)
         {
-            Debug.Log("Enter transformation state");
-
             _transformator = new(_inputService, _camera);
             _positioner = new(_inputService, _raycastManager, _camera, environmentObject, _pointer);
             TransformationModel transformationModel = new(_stateMachine, environmentObject);
@@ -48,8 +41,6 @@ namespace Assets.Sources.ApplicationStateMachine.States
             _transformator.SetObject(environmentObject);
             _pointer.SetState(true);
             _pointer.gameObject.SetActive(true);
-
-            Debug.Log("Finis entered to transformation state");
         }
 
         public void Exit()

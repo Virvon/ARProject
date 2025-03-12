@@ -29,26 +29,21 @@ namespace Assets.Sources.Services.TickService
                 _tickables = _updatedTickables;
                 _updatedTickables = new();
                 _isTickablesUpdated = false;
-                Debug.Log("Ticables count changed " + _tickables.Count);
             }
         }
 
         public void Register(ITickable tickable)
         {
-            Debug.Log("start tickable register");
             _updatedTickables.AddRange(_tickables);
             _updatedTickables.Add(tickable);
             _isTickablesUpdated = true;
-            Debug.Log("finish tickable register");
         }
 
         public void Remove(ITickable tickable)
         {
-            Debug.Log("start ticable removed " + (_tickables.Any(value => value == tickable)));
             _updatedTickables.AddRange(_tickables);
             _updatedTickables.Remove(tickable);
             _isTickablesUpdated = true;
-            Debug.Log("finish ticlable removed");
         }
     }
 }
